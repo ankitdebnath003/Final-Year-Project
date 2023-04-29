@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    {% include "abovelinks.html" %}
+    <link rel="stylesheet" href="/public/css/index.css">
+</head>
+
+    <body>
+
+        {% include "header.html" %}
+
+        <section class="content-wrapper container">
+            <div class="inner-content-wrapper">
+                <div class="inner-content">
+                    <div class="contents">
+                        <img src="/public/images/image.png" alt="Image">
+                        <p>Image Steganography</p>
+                        <div class="link">
+                            <a href="/image/encrypt">Encrypt</a>
+                            <a href="/image/decrypt">Decrypt</a>
+                        </div>
+                    </div>
+                    <div class="contents">
+                        <img src="/public/images/audio.jpg" alt="Audio">
+                        <p>Audio Steganography</p>
+                        <div class="link">
+                            <a href="/audio/encrypt">Encrypt</a>
+                            <a href="/audio/decrypt">Decrypt</a>
+                        </div>
+                    </div>
+                    <div class="contents">
+                        <img class="video-img" src="/public/images/video.png" alt="Video">
+                        <p>Video Steganography</p>
+                        <div class="link">
+                            <a href="/video/encrypt">Encrypt</a>
+                            <a href="/video/decrypt">Decrypt</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="inner-content">
+                    <div class="contents">
+                        <div class="images">
+                            <img src="/public/images/image.png" alt="Image">
+                            <img src="/public/images/audio.jpg" alt="Audio">
+                        </div>
+                        <p>Image & Audio Steganography</p>
+                        <div class="link">
+                            <a href="/imageAndAudio/encrypt">Encrypt</a>
+                            <a href="/imageAndAudio/decrypt">Decrypt</a>
+                        </div>
+                    </div>
+                    <div class="contents">
+                        <div class="images">
+                            <img src="/public/images/audio.jpg" alt="Audio">
+                            <img class="video-img" src="/public/images/video.png" alt="Video">
+                        </div>
+                        <p>Audio & Video Steganography</p>
+                        <div class="link">
+                            <a href="/audioAndVideo/encrypt">Encrypt</a>
+                            <a href="/audioAndVideo/decrypt">Decrypt</a>
+                        </div>
+                    </div>
+                    <div class="contents">
+                        <div class="images">
+                            <img src="/public/images/image.png" alt="Image">
+                            <img class="video-img" src="/public/images/video.png" alt="Video">
+                        </div>
+                        <p>Image & Video Steganography</p>
+                        <div class="link">
+                            <a href="">Encrypt</a>
+                            <a href="">Decrypt</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        {% include "belowlinks.html" %} 
+        
+    </body>
+</html>

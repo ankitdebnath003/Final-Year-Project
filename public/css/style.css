@@ -1,0 +1,87 @@
+body {
+    color: #000;
+    font-family: 'Libre Baskerville', serif;
+    align-items: center;
+    background-color: cyan;
+}
+
+h1 { 
+    text-align: center;
+    margin: 15px 0;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between !important;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+label {
+    font-size: 25px;
+}
+
+#inputTag {
+    display: none;
+}
+
+#audio {
+    text-align:center;
+    border:1px solid black;
+    background-color: #fff;
+}
+
+#audio label {
+    cursor:pointer;
+    padding: 5px 80px;
+}
+
+#audio i {
+    font-size: 30px;
+    color: green;
+}
+
+#audio p {
+    padding: 0;
+    margin: 10px 0;
+    color: #000;
+}
+
+#audioName {
+    background-clip: border-box;
+    background: -webkit-linear-gradient(rgb(116, 116, 97), #361);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.download p {
+    text-align: center;
+    font-size: 35px;
+}
+
+.decoded-msg p {
+    text-align: center;
+    font-size: 35px;
+}
+
+.submit {
+    font-size: 30px;
+    display: inline-block;
+    padding: 5px 30px;
+    border-radius: 5px;
+    cursor: pointer;
+    color: blue;
+    /* background-color: crimson; */
+    line-height: normal;
+}
