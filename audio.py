@@ -7,7 +7,7 @@ allowedExtentions = {'wav'}
 This function is used to check for the file extension and if the extension is allowed to be
 used then the function proceed further.
 """
-def isAllowedFile(fileName):
+def isAllowedAudioFile(fileName):
     return '.' in fileName and fileName.rsplit('.', 1)[1].lower() in allowedExtentions
 
 """
