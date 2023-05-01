@@ -176,12 +176,12 @@ options are available.
 def uploadVideoFile(select):
     decodedMsg = None
 
-    # When the user selects to encrypt the audio file then the respective options
+    # When the user selects to encrypt the video file then the respective options
     # will be shown on the html page.
     if select == "encrypt":
         return render_template('video/index.html', value = "encode")
         
-    # When the user selects to decrypt the audio file then the respective options
+    # When the user selects to decrypt the video file then the respective options
     # will be shown on the html page.
     elif select == "decrypt":
         return render_template('video/index.html', value = "decode")
@@ -189,32 +189,25 @@ def uploadVideoFile(select):
     # When the user submit the encode or decode button then this will be worked.
     if (request.method == 'POST'):
 
-        # If the user wants to encode the audio file with text message then this
+        # If the user wants to encode the video file with text message then this
         # condition will be satisfied. In this if block the data are taken from 
-        # the form and embedded the text message in the audio file and show the 
-        # user to download the encrypted audio file.
+        # the form and embedded the text message in the video file and show the 
+        # user to download the encrypted video file.
         if request.form['action'] == 'Encode':
-            # Taking input of the message and audio file.
+            # Taking input of the message and video file.
             msg = request.form['inputText']
             video = request.files['uploadedVideo']
-            # return video
             if video and isAllowedVideoFile(video.filename):
                 videoFileName = secure_filename(video.filename)
                 videoFilePath = os.path.join(app.config['UploadFolder'], videoFileName)
                 video.save(videoFilePath)
+                encodeVideo(videoFilePath, msg)
+                return render_template('video/index.html', filename = videoFilePath, encoded = "")
+            return "Invalid file format. Please upload a valid video file."
 
-                if isAllowedVideoFile(videoFilePath):
-                    # encodeAudioData(videoFilePath, msg, outputName)
-                    print(encodeVideo(videoFilePath, msg))
-
-                    # filename = "./upload/test.mp4"
-                    return render_template('video/index.html', filename = videoFilePath, encoded = "")
-                return "Invalid WAV file. Please upload a valid WAV file."
-            return "Invalid file format. Please upload a WAV file."
-
-        # If the user wants to decode the audio file then this condition will be 
+        # If the user wants to decode the video file then this condition will be 
         # satisfied. In this if block the text will be fetched from the encoded 
-        # audio file and show the encoded message to the user.
+        # video file and show the encoded message to the user.
         elif request.form['action'] == 'Decode':
             video = request.files['uploadedVideo']
 
@@ -223,7 +216,7 @@ def uploadVideoFile(select):
                 videoFilePath = os.path.join(app.config['UploadFolder'], videoFileName)
                 video.save(videoFilePath)
 
-                # Calling the function to decrypt the audio file and get the 
+                # Calling the function to decrypt the video file and get the 
                 # decrypted message.
                 decodedMsg = decodeVideo(videoFilePath)
                 return render_template('video/index.html', decodedMsg = decodedMsg, decoded = "")
