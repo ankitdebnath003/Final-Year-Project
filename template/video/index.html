@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Video Page</title>
+	{% include "abovelinks.html" %}
+	<link rel="stylesheet" href='/public/css/style.css'>
+</head>
+
+<body>
+
+    {% include "header.html" %}
+
+	{% if value is defined %}
+    	<h1>Encode Text With Video</h1>
+	{% endif %}
+
+    <form method="POST" enctype="multipart/form-data" action="/video" class="container">
+
+		{% if value is defined %}
+			{% if value == "encode" %}
+				<div class="form-group">
+					<label for="firstname">Enter Text To Encode :</label>
+					<input id="firstname" type="text" required class="form-control" name="inputText">
+				</div>
+			{% endif %}
+		{% endif %}
+
+		{% if value == "encode" or value == "decode" %}
+			<div class="form-group"  class="same" id="audio">
+				<label for="inputTag">
+					{% if value == "encode" %}
+						<p>Select Your Video File To Encode</p>
+					{% else %}
+						<p>Select Your Video File To Decode</p>	
+					{% endif %}
+					<i class="fa-solid fa-music"></i>
+					<input id="inputTag" required type="file" accept="video/*" name="uploadedVideo">
+					<p id="audioName"></p>
+				</label>
+			</div>
+		{% endif %}
+
+		{% if value is defined %}
+			{% if value == "encode" %}
+				<input type="submit" name="action" value="Encode" class="submit">
+			{% endif %}
+			{% if value == "decode" %}
+				<input type="submit" name="action" value="Decode" class="submit">
+			{% endif %}
+		{% endif %}
+
+	</form>
+	
+	{% if encoded is defined %}
+		<div class="download">
+			<h1>Your Video File Is Encoded Successfully</h1>
+			<p><a href="{{ filename }}" download>Download Encoded Video</a></p>
+		</div>
+	{% endif %}
+
+	{% if decoded is defined %}
+		<div class="decoded-msg">
+			<h1>The decoded Message is : </h1>
+			<p>{{ decodedMsg }}</p>
+		</div>
+	{% endif %}
+	
+
+    <script src="/public/js/script.js"></script> 
+	{% include "belowlinks.html" %}
+
+  </body>
+</html>

@@ -6,3 +6,5 @@ upload/
 *.wav
 *.bmp
 *.avi
+*.mp4
+temp/

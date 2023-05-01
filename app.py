@@ -1,12 +1,15 @@
 from flask import Flask, render_template, request, session
 from audio import *
 from image import *
+from video import *
 import os
 from werkzeug.utils import secure_filename
 
-# Provide template folder name
-# The default folder name should be "templates" else need to mention custom folder name for template path
-# The default folder name for static files should be "static" else need to mention custom folder for static path
+# Provide template folder name.
+# The default folder name should be "templates" else need to mention custom 
+# folder name for template path.
+# The default folder name for static files should be "static" else need to 
+# mention custom folder for static path.
 app = Flask(__name__, template_folder = 'template', static_folder = '/')
 
 # Defining upload folder path.
@@ -24,6 +27,73 @@ This route is used to show the index page of the project.
 @app.route('/')
 def home():
     return render_template('home/index.html')
+
+"""
+This Route is used to redirect the user to the image page according to the user's
+choice to either encrypt or decrypt the image file and according to that the respective
+options are available. 
+"""
+@app.route('/image/<select>', methods = ["POST", "GET"])
+@app.route('/image', defaults = {'select': 'default'}, methods = ["POST", "GET"])
+def uploadImageFile(select):
+    decodedMsg = None
+
+    # When the user selects to encrypt the audio file then the respective options
+    # will be shown on the html page.
+    if select == "encrypt":
+        return render_template('image/index.html', value = "encode")
+        
+    # When the user selects to decrypt the audio file then the respective options
+    # will be shown on the html page.
+    elif select == "decrypt":
+        return render_template('image/index.html', value = "decode")
+
+    # When the user submit the encode or decode button then this will be worked.
+    if (request.method == 'POST'):
+
+        # If the user wants to encode the audio file with text message then this
+        # condition will be satisfied. In this if block the data are taken from 
+        # the form and embedded the text message in the audio file and show the 
+        # user to download the encrypted audio file.
+        if request.form['action'] == 'Encode':
+            # Taking input of the message and audio file.
+            msg = request.form['inputText']
+            image = request.files['uploadedImage']
+
+            if image and isAllowedImageFile(image.filename):
+                imageFileName = secure_filename(image.filename)
+                imageFilePath = os.path.join(app.config['UploadFolder'], imageFileName)
+                image.save(imageFilePath)
+
+                # if isValidWavFile(imageFilePath):
+                outputName = "encodedimage.bmp"
+
+                # Calling the function to encrypt the text message in the audio file.
+                encodeImageData(imageFilePath, msg, outputName)
+
+                fileName = "encodedimage.bmp"
+                return render_template('image/index.html', filename = fileName, encoded = "")
+            return "Invalid file format. Please upload a BMP Image file."
+
+        # If the user wants to decode the audio file then this condition will be 
+        # satisfied. In this if block the text will be fetched from the encoded 
+        # audio file and show the encoded message to the user.
+        elif request.form['action'] == 'Decode':
+            image = request.files['uploadedImage']
+
+            if image and isAllowedImageFile(image.filename):
+                imageFileName = secure_filename(image.filename)
+                imageFilePath = os.path.join(app.config['UploadFolder'], imageFileName)
+                image.save(imageFilePath)
+
+                # Calling the function to decrypt the audio file and get the 
+                # decrypted message.
+                decodedMsg = decodeImageData(imageFilePath)
+                if decodedMsg != 'Ø':
+                    return render_template('image/index.html', decodedMsg = decodedMsg, decoded = "")
+                return render_template('image/index.html', decodedMsg = "No message is there. Please select a encrypted file.", decoded = "")
+            return "Please Provide Only .bmp File"
+    return render_template('image/index.html')
 
 """
 This Route is used to redirect the user to the audio page according to the user's
@@ -95,25 +165,26 @@ def uploadAudioFile(select):
                 return "Invalid WAV"
     return render_template('audio/index.html')
 
+
 """
-This Route is used to redirect the user to the image page according to the user's
-choice to either encrypt or decrypt the image file and according to that the respective
+This Route is used to redirect the user to the video page according to the user's
+choice to either encrypt or decrypt the video file and according to that the respective
 options are available. 
 """
-@app.route('/image/<select>', methods = ["POST", "GET"])
-@app.route('/image', defaults = {'select': 'default'}, methods = ["POST", "GET"])
-def uploadImageFile(select):
+@app.route('/video/<select>', methods = ["POST", "GET"])
+@app.route('/video', defaults = {'select': 'default'}, methods = ["POST", "GET"])
+def uploadVideoFile(select):
     decodedMsg = None
 
     # When the user selects to encrypt the audio file then the respective options
     # will be shown on the html page.
     if select == "encrypt":
-        return render_template('image/index.html', value = "encode")
+        return render_template('video/index.html', value = "encode")
         
     # When the user selects to decrypt the audio file then the respective options
     # will be shown on the html page.
     elif select == "decrypt":
-        return render_template('image/index.html', value = "decode")
+        return render_template('video/index.html', value = "decode")
 
     # When the user submit the encode or decode button then this will be worked.
     if (request.method == 'POST'):
@@ -125,42 +196,40 @@ def uploadImageFile(select):
         if request.form['action'] == 'Encode':
             # Taking input of the message and audio file.
             msg = request.form['inputText']
-            image = request.files['uploadedImage']
+            video = request.files['uploadedVideo']
+            # return video
+            if video and isAllowedVideoFile(video.filename):
+                videoFileName = secure_filename(video.filename)
+                videoFilePath = os.path.join(app.config['UploadFolder'], videoFileName)
+                video.save(videoFilePath)
 
-            if image and isAllowedImageFile(image.filename):
-                imageFileName = secure_filename(image.filename)
-                imageFilePath = os.path.join(app.config['UploadFolder'], imageFileName)
-                image.save(imageFilePath)
+                if isAllowedVideoFile(videoFilePath):
+                    # encodeAudioData(videoFilePath, msg, outputName)
+                    print(encodeVideo(videoFilePath, msg))
 
-                # if isValidWavFile(imageFilePath):
-                outputName = "encodedimage.bmp"
-
-                # Calling the function to encrypt the text message in the audio file.
-                encodeImageData(imageFilePath, msg, outputName)
-
-                fileName = "encodedimage.bmp"
-                return render_template('image/index.html', filename = fileName, encoded = "")
-            return "Invalid file format. Please upload a BMP Image file."
+                    # filename = "./upload/test.mp4"
+                    return render_template('video/index.html', filename = videoFilePath, encoded = "")
+                return "Invalid WAV file. Please upload a valid WAV file."
+            return "Invalid file format. Please upload a WAV file."
 
         # If the user wants to decode the audio file then this condition will be 
         # satisfied. In this if block the text will be fetched from the encoded 
         # audio file and show the encoded message to the user.
         elif request.form['action'] == 'Decode':
-            image = request.files['uploadedImage']
+            video = request.files['uploadedVideo']
 
-            if image and isAllowedImageFile(image.filename):
-                imageFileName = secure_filename(image.filename)
-                imageFilePath = os.path.join(app.config['UploadFolder'], imageFileName)
-                image.save(imageFilePath)
+            if video and isAllowedVideoFile(video.filename):
+                videoFileName = secure_filename(video.filename)
+                videoFilePath = os.path.join(app.config['UploadFolder'], videoFileName)
+                video.save(videoFilePath)
 
                 # Calling the function to decrypt the audio file and get the 
                 # decrypted message.
-                decodedMsg = decodeImageData(imageFilePath)
-                if decodedMsg != 'Ø':
-                    return render_template('image/index.html', decodedMsg = decodedMsg, decoded = "")
-                return render_template('image/index.html', decodedMsg = "No message is there. Please select a encrypted file.", decoded = "")
-            return "Please Provide Only .bmp File"
-    return render_template('image/index.html')
+                decodedMsg = decodeVideo(videoFilePath)
+                return render_template('video/index.html', decodedMsg = decodedMsg, decoded = "")
+            return render_template('video/index.html', decodedMsg = "Video File is not supported. Please provide another video.", decoded = "")
+    return render_template('video/index.html')
 
 if __name__ == '__main__':
     app.run(debug = True)
+
