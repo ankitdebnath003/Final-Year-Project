@@ -1,4 +1,5 @@
 import wave
+import os
 
 # Define allowed files.
 allowedExtentions = {'wav'}
@@ -34,10 +35,7 @@ def encodeAudioData(audioFile, data, stegoFile):
     frameList = list(frames)
     frameBytes = bytearray(frameList)
     
-    res = ''.join(format(i, '08b') for i in bytearray(data, encoding ='utf-8'))     
-    print("\nThe string after binary conversion :- " + (res))   
-    length = len(res)
-    print("\nLength of binary after conversion :- ",length)
+    res = ''.join(format(i, '08b') for i in bytearray(data, encoding ='utf-8'))
 
     data = data + '*^*^*'
 
@@ -60,9 +58,9 @@ def encodeAudioData(audioFile, data, stegoFile):
 
     with wave.open(stegoFile, 'wb') as fd:
         fd.setparams(audio.getparams())
-        fd.writeframes(frameModified)
-    print("\nEncoded the data successfully in the audio file.")    
+        fd.writeframes(frameModified)  
     audio.close()
+    os.remove(audioFile)
 
 """
 This function is used to get the encoded audio file and extract the encrypted 
@@ -85,7 +83,6 @@ def decodeAudioData(audioFile):
         for byte in allBytes:
             decodedMsg += chr(int(byte, 2))
             if decodedMsg[-5:] == "*^*^*":
-                print("The Encoded data was: ", decodedMsg[:-5])
                 return True, decodedMsg[:-5]
 
         for i in range(len(frameBytes)):
@@ -102,8 +99,8 @@ def decodeAudioData(audioFile):
             for byte in allBytes:
                 decodedMsg += chr(int(byte, 2))
                 if decodedMsg[-5:] == "*^*^*":
-                    print("The Encoded data was: ", decodedMsg[:-5])
                     p = 1
+                    os.remove(audioFile)
                     return True, decodedMsg[:-5]
 
         return False, None

@@ -1,8 +1,11 @@
 body {
     color: #000;
     font-family: 'Libre Baskerville', serif;
+    background: linear-gradient(rgba(0, 0, 0, 0.60), rgba(0, 0, 0, 0.60)), url(../images/img.jpg) no-repeat;
+    background-size: cover;
     align-items: center;
     background-color: cyan;
+    color: #fff;
 }
 
 h1 { 
@@ -36,6 +39,7 @@ label {
     display: none;
 }
 
+
 #audio {
     text-align:center;
     border:1px solid black;
@@ -65,6 +69,11 @@ label {
     -webkit-text-fill-color: transparent;
 }
 
+#audio img {
+    width: 50px;
+    height: 50px;
+}
+
 .download p {
     text-align: center;
     font-size: 35px;
@@ -76,6 +85,7 @@ label {
 }
 
 .submit {
+    margin: 15px 0;
     font-size: 30px;
     display: inline-block;
     padding: 5px 30px;

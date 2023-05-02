@@ -1,127 +1,98 @@
-from PIL import Image
+import math
+import cv2
+import os
 
 # Define allowed files.
-allowedExtentions = {'bmp'}
+allowedExtentions = {'bmp', 'jpg', 'png'}
 
 """
 This function is used to check for the file extension and if the extension is allowed to be
 used then the function proceed further.
 """
-def isAllowedImageFile(fileName):
+def isAllowedImageFile(fileName: str):
     return '.' in fileName and fileName.rsplit('.', 1)[1].lower() in allowedExtentions
-
-"""
-This function is used to take a string data and converts each character of the 
-string into its corresponding 8-bit binary representation using the ASCII value
-and it takes the string as data and return the binary data. 
-"""
-def genData(data):
-    binData = []
-
-    # Convert each character into a binary representation.
-    for ch in data:
-        binData.append(format(ord(ch), '08b'))
-    return binData
-
-"""
-This function is used for modifying the pixels of an image based on the binary 
-data to be encoded. The function takes the pixels of the image and binary data
-and embed the binary data into the pixels of the image.
-"""
-def modifyPixel(pixel, data):
-    # Calling the function to get the binary data of the text message.
-    dataList = genData(data)
-    lenData = len(dataList)
-    pixelIterator = iter(pixel)
-
-    for i in range(lenData):
-        # Extracting 3 pixels at a time.
-        pixel = [value for value in pixelIterator.__next__()[:3] + pixelIterator.__next__()[:3] + pixelIterator.__next__()[:3]]
-
-        # Modifies the pixel values based on the binary data, ensuring that '0' 
-        # bits result in even pixel values and '1' bits result in odd pixel values.
-        for j in range(0, 8):
-            if dataList[i][j] == '0' and pixel[j] % 2 != 0:
-                pixel[j] -= 1
-
-            elif dataList[i][j] == '1' and pixel[j] % 2 == 0:
-                if pixel[j] != 0:
-                    pixel[j] -= 1
-                else:
-                    pixel[j] += 1
-
-        # Eighth pixel of every set tells whether to stop or read further.
-        # 0 means keep reading; 1 means the message is over.
-        if i == lenData - 1:
-            if pixel[-1] % 2 == 0 and pixel[-1] != 0:
-                pixel[-1] -= 1
-            else:
-                pixel[-1] += 1
-        elif pixel[-1] % 2 != 0:
-                pixel[-1] -= 1
-
-        pixel = tuple(pixel)
-        yield pixel[0:3]
-        yield pixel[3:6]
-        yield pixel[6:9]
-
-"""
-This function is used to do image encoding by modifying the pixels of the image 
-based on the provided data. It takes the image and text as input and embed the 
-message into the pixel of the image.
-"""
-def encodeImagePixels(img, data):
-    w = img.size[0]
-    (x, y) = (0, 0)
-
-    for pixel in modifyPixel(img.getdata(), data):
-        # Putting modified pixels in the new image.
-        img.putpixel((x, y), pixel)
-        if (x == w - 1):
-            x = 0
-            y += 1
-        else:
-            x += 1
 
 """
 This function is used to do image encoding by modifying the pixels of the image 
 and the message. It takes the image ,text and the image output name as input
-and after encrypt the message into the image it it saves the image locally to make
+and after encrypt the message into the image it saves the image locally to make
 it available for download.
 """
-def encodeImageData(imageFilePath, msg, outputName):
-    image = Image.open(imageFilePath, 'r')
+def encodeImageData(imgFile: str, message: str, outputName: str):
+    # Load the image.
+    img = cv2.imread(imgFile)
+    # Store each character's ASCII value of the message.
+    message = [format(ord(i), '08b') for i in message]
+    _, width, _ = img.shape
+    # Algorithm to encode the image.
+    pixelRequired = len(message) * 3
+    rowRequired = pixelRequired / width
+    rowRequired = math.ceil(rowRequired)
 
-    if (len(msg) == 0):
-        raise ValueError('Data is empty')
-
-    if len(msg) % 2 == 1:
-        msg += ' '
-
-    newImg = image.copy()
-    # Calling the function to add message in each pixel of the image.
-    encodeImagePixels(newImg, msg)
-    # Saving the image locally to make it available for download.
-    newImg.save(outputName, str(outputName.split(".")[1].upper()))
+    count, charCount = 0, 0
+    for i in range(rowRequired + 1):
+        while count < width and charCount < len(message):
+            char = message[charCount]
+            charCount += 1
+            # charIndex holds each characters index and char holds each character.
+            for charIndex, char in enumerate(char):
+                if (char == '1' and img[i][count][charIndex % 3] % 2 == 0) or (
+                        char == '0' and img[i][count][charIndex % 3] % 2 == 1):
+                    img[i][count][charIndex % 3] -= 1
+                if charIndex % 3 == 2:
+                    count += 1
+                if charIndex == 7:
+                    if charCount * 3 < pixelRequired and img[i][count][2] % 2 == 1:
+                        img[i][count][2] -= 1
+                    if charCount * 3 >= pixelRequired and img[i][count][2] % 2 == 0:
+                        img[i][count][2] -= 1
+                    count += 1
+        count = 0
+    # Write the encrypted image into a new file.
+    cv2.imwrite(outputName, img)
+    os.remove(imgFile)
 
 """
 This function is used to decrypt the encrypted image file and get the encrypted 
 message. It takes the image file as input and return the decoded message.
 """
-def decodeImageData(imageFile):
-    image = Image.open(imageFile, 'r')
-    decodedMsg = ''
-    imgData = iter(image.getdata())
-
-    while (True):
-        pixels = [value for value in imgData.__next__()[:3] + imgData.__next__()[:3] + imgData.__next__()[:3]]
-        binStr = ''
-        for i in pixels[:8]:
-            if (i % 2 == 0):
-                binStr += '0'
+def decodeImageData(imgFile: str):
+    # Algorithm to decrypt the data from the image.
+    img = cv2.imread(imgFile)
+    data = []
+    stop = False
+    for rowIndex, row in enumerate(img):
+        row.tolist()
+        for pixelIndex, pixel in enumerate(row):
+            if pixelIndex % 3 == 2:
+                # By extracting the LSBs of the first two color channels and 
+                # checking the LSB of the third color channel, the code is able 
+                # to decode the information embedded in the image until the stop 
+                # condition is met.
+                data.append(bin(pixel[0])[-1])
+                data.append(bin(pixel[1])[-1])
+                if bin(pixel[2])[-1] == '1':
+                    stop = True
+                    break
             else:
-                binStr += '1'
-
-        decodedMsg += chr(int(binStr, 2))
-        if (pixels[-1] % 2 != 0):
-            return decodedMsg
+                # Retrieves the first (red) color channel value of the pixel and
+                # converts it to a binary string representation and takes the 
+                # last character of that binary string. This last character 
+                # represents the LSB of the red color channel.
+                data.append(bin(pixel[0])[-1])
+                # Retrieves the same data as the previous data, but for the 
+                # second (green) color channel of the pixel.
+                data.append(bin(pixel[1])[-1])
+                # Retrieves the same data as the previous data, but for the 
+                # third (blue) color channel of the pixel.
+                data.append(bin(pixel[2])[-1])
+        if stop:
+            break
+    decodedMessage = []
+    # Join all the bits to form letters.
+    for i in range(int((len(data) + 1) / 8)):
+        decodedMessage.append(data[i * 8:(i * 8 + 8)])
+    # Join all the letters to form the message.
+    decodedMessage = [chr(int(''.join(i), 2)) for i in decodedMessage]
+    os.remove(imgFile)
+    return ''.join(decodedMessage)

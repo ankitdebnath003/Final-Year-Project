@@ -131,6 +131,7 @@ def decodeVideo(file):
     # Join the list of the encrypted message as a string.
     decodedMsg = decodedMsg.join([i for i in encryptedMsg])
     cleanTempFolder()
+    os.remove(file)
     if decodedMsg == '':
         return "No encrypted message is in the video file."
     return decodedMsg

@@ -36,7 +36,7 @@
 					{% else %}
 						<p>Select Your Video File To Decode</p>	
 					{% endif %}
-					<i class="fa-solid fa-music"></i>
+					<img src="/public/images/video1.png" alt="video">
 					<input id="inputTag" required type="file" accept="video/*" name="uploadedVideo">
 					<p id="audioName"></p>
 				</label>
@@ -57,7 +57,7 @@
 	{% if encoded is defined %}
 		<div class="download">
 			<h1>Your Video File Is Encoded Successfully</h1>
-			<p><a href="{{ filename }}" download>Download Encoded Video</a></p>
+			<p><a href="#" onclick="downloadFile('{{ filename }}')">Download Encoded Video</a></p>
 		</div>
 	{% endif %}
 
@@ -68,7 +68,6 @@
 		</div>
 	{% endif %}
 	
-
     <script src="/public/js/script.js"></script> 
 	{% include "belowlinks.html" %}
 
