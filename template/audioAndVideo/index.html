@@ -15,21 +15,21 @@
     {% include "header.html" %}
 
 	{% if value is defined %}
-    	<h1>Encode Text With Image And Audio</h1>
+    	<h1>Encode Text With Audio And Video</h1>
 	{% endif %}
 
-    <form method="POST" enctype="multipart/form-data" action="/imageAndAudio" class="container">
+    <form method="POST" enctype="multipart/form-data" action="/audioAndVideo" class="container">
 
 		{% if value is defined %}
 			{% if value == "encode" %}
 			<div class="multiple-input">
 				<div class="form-group">
-					<label for="firstname">Enter Text To Encode In Image :</label>
-					<input id="firstname" type="text" required class="form-control" name="inputTextImage">
-				</div>
-				<div class="form-group">
 					<label for="firstname">Enter Text To Encode In Audio :</label>
 					<input id="firstname" type="text" required class="form-control" name="inputTextAudio">
+				</div>
+				<div class="form-group">
+					<label for="firstname">Enter Text To Encode In Video :</label>
+					<input id="firstname" type="text" required class="form-control" name="inputTextVideo">
 				</div>
 			</div>
 			{% endif %}
@@ -40,23 +40,23 @@
 			<div class="form-group input-image-audio">
 				<div class="alignment">
 					{% if value == "encode" %}
-						<p>Select Your Image File To Encode</p>
-					{% else %}
-						<p>Select Your Image File To Decode</p>	
-					{% endif %}
-					<i class="fa-solid fa-image"></i>
-					<input required type="file" accept="image/*" name="uploadedImage">
-				</div>
-			</div>
-			<div class="form-group input-image-audio">
-				<div class="alignment">
-					{% if value == "encode" %}
 						<p>Select Your Audio File To Encode</p>
 					{% else %}
 						<p>Select Your Audio File To Decode</p>	
 					{% endif %}
 					<i class="fa-solid fa-music"></i>
-					<input required type="file" accept=".wav" name="uploadedAudio">
+					<input required type="file" accept="audio/*" name="uploadedAudio">
+				</div>
+			</div>
+			<div class="form-group input-image-audio">
+				<div class="alignment">
+					{% if value == "encode" %}
+						<p>Select Your Video File To Encode</p>
+					{% else %}
+						<p>Select Your Video File To Decode</p>	
+					{% endif %}
+					<img src="/public/images/video1.png" alt="video">
+					<input required type="file" accept="video/*" name="uploadedVideo">
 				</div>
 			</div>
 		</div>
@@ -75,12 +75,12 @@
 	
 	{% if encoded is defined %}
 		<div class="download">
-			<h1>Your Image File Is Encoded Successfully</h1>
-			<p><a href="#" onclick="downloadFile('{{ imagefilename }}')">Download Encoded Image</a></p>
-		</div>
-		<div class="download">
 			<h1>Your Audio File Is Encoded Successfully</h1>
 			<p><a href="#" onclick="downloadFile('{{ audiofilename }}')">Download Encoded Audio</a></p>
+		</div>
+		<div class="download">
+			<h1>Your Video File Is Encoded Successfully</h1>
+			<p><a href="#" onclick="downloadFile('{{ videofilename }}')">Download Encoded Video</a></p>
 		</div>
 	{% endif %}
 
