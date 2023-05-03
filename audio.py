@@ -1,7 +1,7 @@
 import wave
 import os
 
-# Define allowed files.
+# Define allowed audio files.
 allowedExtentions = {'wav'}
 
 """
@@ -115,6 +115,9 @@ def decodeAudioData(audioFile):
 
             allBytes = [extracted[i: i + 8] for i in range(0, len(extracted), 8)]
             decodedMsg = ""
+
+            # Iterates over each byte then converts it from binary to an integer 
+            # and then converts the integer to its corresponding character.
             for byte in allBytes:
                 decodedMsg += chr(int(byte, 2))
                 if decodedMsg[-5:] == "*^*^*":

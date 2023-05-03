@@ -5,7 +5,7 @@ from subprocess import call, STDOUT
 import cv2
 from stegano import lsb
 
-# Define allowed files.
+# Define allowed video files.
 allowedExtentions = {'mp4', 'avi'}
 
 """
