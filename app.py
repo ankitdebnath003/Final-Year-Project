@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, session
 from audio import *
 from image import *
 from video import *
+from text import *
 import os
 from werkzeug.utils import secure_filename
 
@@ -423,11 +424,11 @@ def uploadAudioAndVideoFile(select):
         # taken from the form and embedded the text message in the audio and video 
         # file and show the user to download the encrypted audio and video file.
         if request.form['action'] == 'Encode':
+            # Taking input of the message.
+            msg = request.form['inputText']
             # Taking input of the message and audio file.
-            audioMsg = request.form['inputTextAudio']
             audio = request.files['uploadedAudio']
             # Taking input of the message and video file.
-            videoMsg = request.form['inputTextVideo']
             video = request.files['uploadedVideo']
             if video and audio and isAllowedVideoFile(video.filename) and isAllowedAudioFile(audio.filename):
                 # Getting the audio file name and save it to the local to access it.
@@ -439,6 +440,9 @@ def uploadAudioAndVideoFile(select):
                 videoFileName = secure_filename(video.filename)
                 videoFilePath = os.path.join(app.config['UploadFolder'], videoFileName)
                 video.save(videoFilePath)
+                
+                # Calling the function to divide the message into two parts.
+                audioMsg, videoMsg = splitMessage(msg)
 
                 # Calling the function to encrypt the text message in the audio file.
                 audioOutputName = "encodedaudio.wav"
@@ -472,7 +476,11 @@ def uploadAudioAndVideoFile(select):
                 flag, audioDecodedMsg = decodeAudioData(audioFilePath)
                 # Calling the function to decrypt the video file and get the message.
                 videoDecodedMsg = decodeVideo(videoFilePath)
-                return render_template('audioAndVideo/index.html', decodedMsg = audioDecodedMsg + ' ' + videoDecodedMsg, decoded = "")
+                # Calling the function to add both the messages to create the final
+                # encrypted message.
+                decodedMsg = joinMessage(audioDecodedMsg, videoDecodedMsg)
+
+                return render_template('audioAndVideo/index.html', decodedMsg = decodedMsg, decoded = "")
             return render_template('audioAndVideo/index.html', decodedMsg = "Video File is not supported. Please provide another video.", decoded = "")
     return render_template('audioAndVideo/index.html')
 
