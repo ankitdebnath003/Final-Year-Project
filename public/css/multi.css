@@ -50,3 +50,33 @@
 .form-group {
     margin: auto 20px;
 }
+
+.logo {
+    width: 300px;
+    height: 80px;
+}
+
+.sub-menu {
+    display: flex;
+}
+
+.bg-white {
+    background: rgba(255, 255, 255, 0.2) !important;
+}
+
+.navbar-light {
+    font-size: 30px;
+}
+
+.navbar-brand {
+    font-size: 30px;
+}
+
+.navbar-brand:hover {
+    color: #fff !important;
+}
+
+.btn {
+    font-size: 20px;
+}
+
