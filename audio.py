@@ -72,7 +72,7 @@ def encodeAudioData(audioFile, data, stegoFile):
         fd.setparams(audio.getparams())
         fd.writeframes(frameModified)  
     audio.close()
-    os.remove(audioFile)
+    # os.remove(audioFile)
 
 """
 This function is used to get the encoded audio file and extract the encrypted 

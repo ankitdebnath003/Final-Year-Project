@@ -3,7 +3,7 @@ import cv2
 import os
 
 # Define allowed files.
-allowedExtentions = {'bmp', 'jpg', 'png'}
+allowedExtentions = {'bmp'}
 
 """
 This function is used to check for the file extension and if the extension is allowed to be
@@ -50,7 +50,7 @@ def encodeImageData(imgFile: str, message: str, outputName: str):
         count = 0
     # Write the encrypted image into a new file.
     cv2.imwrite(outputName, img)
-    os.remove(imgFile)
+    # os.remove(imgFile)
 
 """
 This function is used to decrypt the encrypted image file and get the encrypted 
@@ -94,5 +94,5 @@ def decodeImageData(imgFile: str):
         decodedMessage.append(data[i * 8:(i * 8 + 8)])
     # Join all the letters to form the message.
     decodedMessage = [chr(int(''.join(i), 2)) for i in decodedMessage]
-    os.remove(imgFile)
+    # os.remove(imgFile)
     return ''.join(decodedMessage)

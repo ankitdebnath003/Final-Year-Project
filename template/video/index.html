@@ -57,7 +57,7 @@
 	{% if encoded is defined %}
 		<div class="download">
 			<h1>Your Video File Is Encoded Successfully</h1>
-			<p><a href="#" onclick="downloadFile('{{ filename }}')">Download Encoded Video</a></p>
+			<p><a href="{{ filename }}" download>Download Encoded Video</a></p>
 		</div>
 	{% endif %}
 

@@ -29,15 +29,12 @@ This route is used to show the index page of the project.
 def home():
     return render_template('home/index.html')
 
-@app.route('/updateFile', methods=['GET'])
-def updateFile():
-    fileName = request.args.get('file')
-    # Remove the file
-    try:
-        os.remove(fileName)
-        return 'File removed successfully'
-    except OSError as e:
-        return f'Error removing the file: {str(e)}'
+"""
+This route is used to show the index page of the project.
+"""
+@app.route('/about')
+def about():
+    return render_template('about/index.html')
 
 """
 This Route is used to redirect the user to the image page according to the user's
@@ -97,10 +94,10 @@ def uploadImageFile(select):
                 # Calling the function to decrypt the audio file and get the 
                 # decrypted message.
                 decodedMsg = decodeImageData(imageFilePath)
-                if decodedMsg != 'Ø':
+                if decodedMsg != '':
                     return render_template('image/index.html', decodedMsg = decodedMsg, decoded = "")
                 return render_template('image/index.html', decodedMsg = "No message is there. Please select a encrypted file.", decoded = "")
-            return "Please Provide Only .bmp File"
+            return "Invalid file format. Please upload a BMP Image file."
     return render_template('image/index.html')
 
 """
@@ -204,6 +201,7 @@ def uploadVideoFile(select):
             # Taking input of the message and video file.
             msg = request.form['inputText']
             video = request.files['uploadedVideo']
+
             if video and isAllowedVideoFile(video.filename):
                 videoFileName = secure_filename(video.filename)
                 videoFilePath = os.path.join(app.config['UploadFolder'], videoFileName)
@@ -260,11 +258,11 @@ def uploadImageAndAudioFile(select):
         # taken from the form and embedded the text message in the image and audio 
         # file and show the user to download the encrypted image and audio file.
         if request.form['action'] == 'Encode':
-            # Taking input of the message and image file.
-            imageMsg = request.form['inputTextImage']
+            # Taking input of the message.
+            msg = request.form['inputText']
+            # Taking input of the image file.
             image = request.files['uploadedImage']
-            # Taking input of the message and audio file.
-            audioMsg = request.form['inputTextAudio']
+            # Taking input of the audio file.
             audio = request.files['uploadedAudio']
             if audio and image and isAllowedAudioFile(audio.filename) and isAllowedImageFile(image.filename):
                 # Getting the image file name and save it to the local to access it.
@@ -276,6 +274,9 @@ def uploadImageAndAudioFile(select):
                 audioFileName = secure_filename(audio.filename)
                 audioFilePath = os.path.join(app.config['UploadFolder'], audioFileName)
                 audio.save(audioFilePath)
+
+                # Calling the function to divide the message into two parts.
+                imageMsg, audioMsg = splitMessage(msg)
 
                 # Calling the function to encrypt the text message in the image file.
                 imageOutputName = "encodedimage.bmp"
@@ -311,7 +312,12 @@ def uploadImageAndAudioFile(select):
 
                 # Calling the function to decrypt the audio file and get the decrypted message.
                 flag, audioDecodedMsg = decodeAudioData(audioFilePath)
-                return render_template('imageAndAudio/index.html', decodedMsg = imageDecodedMsg + ' ' + audioDecodedMsg, decoded = "")
+
+                # Calling the function to add both the messages to create the final
+                # encrypted message.
+                decodedMsg = joinMessage(imageDecodedMsg, audioDecodedMsg)
+
+                return render_template('imageAndAudio/index.html', decodedMsg = decodedMsg, decoded = "")
             return render_template('imageAndAudio/index.html', decodedMsg = "Video File is not supported. Please provide another video.", decoded = "")
     return render_template('imageAndAudio/index.html')
 
@@ -343,11 +349,11 @@ def uploadImageAndVideoFile(select):
         # taken from the form and embedded the text message in the image and video 
         # file and show the user to download the encrypted image and video file.
         if request.form['action'] == 'Encode':
-            # Taking input of the message and image file.
-            imageMsg = request.form['inputTextImage']
+            # Taking input of the message.
+            msg = request.form['inputText']
+            # Taking input of the image file.
             image = request.files['uploadedImage']
-            # Taking input of the message and video file.
-            videoMsg = request.form['inputTextVideo']
+            # Taking input of the video file.
             video = request.files['uploadedVideo']
             if video and image and isAllowedVideoFile(video.filename) and isAllowedImageFile(image.filename):
                 # Getting the image file name and save it to the local to access it.
@@ -359,6 +365,9 @@ def uploadImageAndVideoFile(select):
                 videoFileName = secure_filename(video.filename)
                 videoFilePath = os.path.join(app.config['UploadFolder'], videoFileName)
                 video.save(videoFilePath)
+
+                # Calling the function to divide the message into two parts.
+                imageMsg, videoMsg = splitMessage(msg)
 
                 # Calling the function to encrypt the text message in the image file.
                 imageOutputName = "encodedimage.bmp"
@@ -392,7 +401,12 @@ def uploadImageAndVideoFile(select):
                 imageDecodedMsg = decodeImageData(imageFilePath)
                 # Calling the function to decrypt the video file and get the message.
                 videoDecodedMsg = decodeVideo(videoFilePath)
-                return render_template('imageAndVideo/index.html', decodedMsg = imageDecodedMsg + ' ' + videoDecodedMsg, decoded = "")
+
+                # Calling the function to add both the messages to create the final
+                # encrypted message.
+                decodedMsg = joinMessage(imageDecodedMsg, videoDecodedMsg)
+
+                return render_template('imageAndVideo/index.html', decodedMsg = decodedMsg, decoded = "")
             return render_template('imageAndVideo/index.html', decodedMsg = "Video File is not supported. Please provide another video.", decoded = "")
     return render_template('imageAndVideo/index.html')
 
@@ -426,9 +440,9 @@ def uploadAudioAndVideoFile(select):
         if request.form['action'] == 'Encode':
             # Taking input of the message.
             msg = request.form['inputText']
-            # Taking input of the message and audio file.
+            # Taking input of the audio file.
             audio = request.files['uploadedAudio']
-            # Taking input of the message and video file.
+            # Taking input of the video file.
             video = request.files['uploadedVideo']
             if video and audio and isAllowedVideoFile(video.filename) and isAllowedAudioFile(audio.filename):
                 # Getting the audio file name and save it to the local to access it.
@@ -450,6 +464,7 @@ def uploadAudioAndVideoFile(select):
 
                 # Calling the function to encrypt the text message in the video file.
                 encodeVideo(videoFilePath, videoMsg)
+
                 return render_template('audioAndVideo/index.html', audiofilename = audioOutputName, videofilename = videoFilePath, encoded = "")
             return "Invalid file format. Please upload a valid file."
 
@@ -476,6 +491,7 @@ def uploadAudioAndVideoFile(select):
                 flag, audioDecodedMsg = decodeAudioData(audioFilePath)
                 # Calling the function to decrypt the video file and get the message.
                 videoDecodedMsg = decodeVideo(videoFilePath)
+
                 # Calling the function to add both the messages to create the final
                 # encrypted message.
                 decodedMsg = joinMessage(audioDecodedMsg, videoDecodedMsg)

@@ -15,7 +15,11 @@
     {% include "header.html" %}
 
 	{% if value is defined %}
-    	<h1>Encode Text With Image And Audio</h1>
+		{% if value == "encode" %}
+			<h1>Encode Text With Image And Audio</h1>
+		{% elif value == "decode" %}
+			<h1>Decode The Image And Audio</h1>
+		{% endif %}
 	{% endif %}
 
     <form method="POST" enctype="multipart/form-data" action="/imageAndAudio" class="container">
@@ -24,12 +28,8 @@
 			{% if value == "encode" %}
 			<div class="multiple-input">
 				<div class="form-group">
-					<label for="firstname">Enter Text To Encode In Image :</label>
-					<input id="firstname" type="text" required class="form-control" name="inputTextImage">
-				</div>
-				<div class="form-group">
-					<label for="firstname">Enter Text To Encode In Audio :</label>
-					<input id="firstname" type="text" required class="form-control" name="inputTextAudio">
+					<label for="firstname">Enter Text To Encode :</label>
+					<input id="firstname" type="text" required class="form-control" name="inputText">
 				</div>
 			</div>
 			{% endif %}
@@ -76,11 +76,11 @@
 	{% if encoded is defined %}
 		<div class="download">
 			<h1>Your Image File Is Encoded Successfully</h1>
-			<p><a href="#" onclick="downloadFile('{{ imagefilename }}')">Download Encoded Image</a></p>
+			<p><a href="{{ imagefilename }}" download>Download Encoded Image</a></p>
 		</div>
 		<div class="download">
 			<h1>Your Audio File Is Encoded Successfully</h1>
-			<p><a href="#" onclick="downloadFile('{{ audiofilename }}')">Download Encoded Audio</a></p>
+			<p><a href="{{ audiofilename }}" download>Download Encoded Audio</a></p>
 		</div>
 	{% endif %}
 

@@ -14,7 +14,15 @@
     {% include "header.html" %}
 
 	{% if value is defined %}
-    	<h1>Encode Text With Audio</h1>
+
+		{% if value == "encode" %}
+    		<h1>Encode Text With Audio</h1>
+		{% endif %}
+
+		{% if value == "decode" %}
+    		<h1>Decode The Audio File</h1>
+		{% endif %}
+
 	{% endif %}
 
     <form method="POST" enctype="multipart/form-data" action="/audio" class="container">
@@ -57,7 +65,7 @@
 	{% if encoded is defined %}
 		<div class="download">
 			<h1>Your Audio File Is Encoded Successfully</h1>
-			<p><a href="#" onclick="downloadFile('{{ filename }}')">Download Encoded Audio</a></p>
+			<p><a href="{{ filename }}" download>Download Encoded Audio</a></p>
 		</div>
 	{% endif %}
 
@@ -68,7 +76,6 @@
 		</div>
 	{% endif %}
 	
-
     <script src="/public/js/script.js"></script> 
 	{% include "belowlinks.html" %}
 

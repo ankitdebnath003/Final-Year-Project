@@ -1,0 +1,24 @@
+body {
+    color: #000;
+    font-family: 'Libre Baskerville', serif;
+    background: linear-gradient(rgba(0, 0, 0, 0.60), rgba(0, 0, 0, 0.60)), url(../images/img.jpg) no-repeat;
+    background-size: cover;
+    align-items: center;
+    background-color: cyan;
+    color: #fff;
+}
+
+h1 { 
+    text-align: center;
+    margin: 15px 0;
+    font-size: 45px;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between !important;
+}
+
+p {
+    font-size: 25px;
+}

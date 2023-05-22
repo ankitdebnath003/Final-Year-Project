@@ -14,7 +14,11 @@
     {% include "header.html" %}
 
 	{% if value is defined %}
-    	<h1>Encode Text With Image</h1>
+		{% if value == "encode" %}
+    		<h1>Encode Text With Image</h1>
+		{% elif value == "decode" %}
+    		<h1>Decode The Image</h1>
+		{% endif %}
 	{% endif %}
 
     <form method="POST" enctype="multipart/form-data" action="/image" class="container">
@@ -57,7 +61,7 @@
 	{% if encoded is defined %}
 		<div class="download">
 			<h1>Your Image File Is Encoded Successfully</h1>
-			<p><a href="#" onclick="downloadFile('{{ filename }}')">Download Encoded Image</a></p>
+			<p><a download href="{{ filename }}">Download Encoded Image</a></p>
 		</div>
 	{% endif %}
 
