@@ -1,0 +1,125 @@
+body {
+    color: #000;
+    font-family: 'Libre Baskerville', serif;
+    background: linear-gradient(rgba(0, 0, 0, 0.60), rgba(0, 0, 0, 0.60)), url(../images/img.jpg) no-repeat;
+    background-size: cover;
+    align-items: center;
+    background-color: cyan;
+    color: #fff;
+}
+
+h1 { 
+    text-align: center;
+    margin: 15px 0;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between !important;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+label {
+    font-size: 25px;
+}
+
+#inputTag {
+    display: none;
+}
+
+
+#audio {
+    text-align:center;
+    border:1px solid black;
+    background-color: #fff;
+}
+
+#audio label {
+    cursor:pointer;
+    padding: 5px 80px;
+}
+
+#audio i {
+    font-size: 30px;
+    color: green;
+}
+
+#audio p {
+    padding: 0;
+    margin: 10px 0;
+    color: #000;
+}
+
+#audioName {
+    background-clip: border-box;
+    background: -webkit-linear-gradient(rgb(116, 116, 97), #361);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+#audio img {
+    width: 50px;
+    height: 50px;
+}
+
+.download p {
+    text-align: center;
+    font-size: 35px;
+}
+
+.decoded-msg p {
+    text-align: center;
+    font-size: 35px;
+}
+
+.submit {
+    margin: 15px 0;
+    font-size: 30px;
+    display: inline-block;
+    padding: 5px 30px;
+    border-radius: 5px;
+    cursor: pointer;
+    color: blue;
+    line-height: normal;
+}
+
+.logo {
+    width: 300px;
+    height: 80px;
+}
+
+.sub-menu {
+    display: flex;
+}
+
+.bg-white {
+    background: rgba(255, 255, 255, 0.2) !important;
+}
+
+.navbar-light {
+    font-size: 30px;
+}
+
+.navbar-brand {
+    font-size: 30px;
+}
+
+.btn {
+    font-size: 20px;
+}
+
+.navbar-brand:hover {
+    color: #fff !important;
+}

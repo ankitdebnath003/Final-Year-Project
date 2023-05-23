@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>About Page</title>
+	{% include "abovelinks.html" %}
+	<link rel="stylesheet" href='/public/css/about.css'>
+</head>
+
+<body>
+
+    {% include "header.html" %}
+
+	<div class="container">
+		<h1>About Steganography</h1>
+		<p>Our project focuses on the concept of steganography, which involves hiding secret information within images, audio and video. With our user-friendly application, you can encode and decode data seamlessly.</p>
+		<p>Steganography is the technique of hiding secret data within an ordinary, non-secret, file or message in order to avoid detection; the secret data is then extracted at its destination. The use of steganography can be combined with encryption as an extra step for hiding or protecting data.</p>
+		<p>Encoding: Using our application, you can select an image, audio and video as the carrier and specify the secret data you wish to conceal. Whether it's text, files, or other images, audio and video, our advanced steganography techniques will embed the data into the carrier image, audio and video without perceptible alterations.</p>
+		<p>Decoding: If you have an encoded image, audio or video, our application allows you to extract the hidden information effortlessly. Simply upload the encoded image, audio or video, and our system will analyze it to reveal the concealed data.</p>
+		<p>Our project aims to provide a convenient and secure solution for hiding sensitive information within images, audio or video. Explore the power of steganography and protect your valuable data with ease.</p>
+	</div>
+	
+    <script src="/public/js/script.js"></script> 
+	{% include "belowlinks.html" %}
+
+  </body>
+</html>

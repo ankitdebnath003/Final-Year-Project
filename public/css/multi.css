@@ -1,0 +1,82 @@
+.alignment {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    font-size: 25px;
+    color: #000;
+}
+
+.alignment input {
+    margin: 10px 0;
+    width: 75%;
+}
+
+.input-image-audio {
+    text-align:center;
+    border:1px solid black;
+    background-color: #fff;
+}
+
+.input-image-audio label {
+    cursor:pointer;
+    padding: 5px 80px;
+}
+
+.input-image-audio i {
+    font-size: 40px;
+    margin: 10px 0;
+    color: green;
+}
+
+.input-image-audio p {
+    padding: 0;
+    margin: 10px 0;
+    color: #000;
+}
+
+.input-image-audio img {
+    width: 50px;
+    height: 50px;
+}
+
+.multiple-input {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px;
+}
+
+.form-group {
+    margin: auto 20px;
+}
+
+.logo {
+    width: 300px;
+    height: 80px;
+}
+
+.sub-menu {
+    display: flex;
+}
+
+.bg-white {
+    background: rgba(255, 255, 255, 0.2) !important;
+}
+
+.navbar-light {
+    font-size: 30px;
+}
+
+.navbar-brand {
+    font-size: 30px;
+}
+
+.navbar-brand:hover {
+    color: #fff !important;
+}
+
+.btn {
+    font-size: 20px;
+}
+

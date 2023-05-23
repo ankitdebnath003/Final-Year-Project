@@ -1,0 +1,9 @@
+public/audio/
+__pycache__/
+env/
+upload/
+*.wav
+*.bmp
+*.avi
+*.mp4
+temp/
