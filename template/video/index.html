@@ -14,7 +14,12 @@
     {% include "header.html" %}
 
 	{% if value is defined %}
-    	<h1>Encode Text With Video</h1>
+		{% if value == "encode" %}
+    		<h1>Encode Text With Video</h1>
+		{% elif value == "decode" %}
+    		<h1>Decode The Video File</h1>
+		{% endif %}
+
 	{% endif %}
 
     <form method="POST" enctype="multipart/form-data" action="/video" class="container">

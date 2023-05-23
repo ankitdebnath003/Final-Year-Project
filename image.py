@@ -1,6 +1,5 @@
 import math
 import cv2
-import os
 
 # Define allowed files.
 allowedExtentions = {'bmp'}
@@ -50,7 +49,6 @@ def encodeImageData(imgFile: str, message: str, outputName: str):
         count = 0
     # Write the encrypted image into a new file.
     cv2.imwrite(outputName, img)
-    # os.remove(imgFile)
 
 """
 This function is used to decrypt the encrypted image file and get the encrypted 

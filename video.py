@@ -65,10 +65,10 @@ def extractFrames(video):
 This function is used to hide existed encrypted message in the frames.
 """
 def hideExistingMsg(frameList):
-    for f_name in frameList:
+    for fName in frameList:
         # Hide an empty string to overwrite the existing text.
-        secret_enc = lsb.hide(f_name, " ")  
-        secret_enc.save(f_name)
+        secret_enc = lsb.hide(fName, " ")  
+        secret_enc.save(fName)
 
 """
 This function is used to get the encrypted message if it exists in any frame of
